@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 var db = require('../db')
 var login_module = require('../module/login')
 var multer = require('multer');
-var DIR = 'src/assets/uploads/';
+var DIR = 'dist/assets/uploads/';
 var upload = multer({dest: DIR}).single('photo');
 
 
