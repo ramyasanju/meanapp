@@ -1,0 +1,50 @@
+<main>
+  <div >
+      <h1>Welcome {{welcomemessage}}</h1>
+      <h2> Your Post Count : {{ postcount }} </h2>
+      <div class="form-group">
+          <button (click)="logout()" class="btn">Logout</button>
+      </div>  
+      <div class="form-group">
+      <a [routerLink]="['/newpost']" >Add Post</a>
+      </div> 
+    <h2>Posts</h2>    
+    <table>
+      <tr>
+        <th> Title </th>
+        <th>       </th>
+        <th> Description </th>
+        <th>       </th>
+        <th> Tags </th>
+      </tr>
+      <tr *ngFor="let row of posts">
+          <td>{{row.title}}</td>
+          <td>             </td>
+          <td>{{row.description}}</td>
+          <td>             </td>
+          <td>{{row.tags}}</td>
+          <td>             </td>
+          <td>
+            <div *ngIf='row.userid === user_id' class="form-group">
+              <button (click)="edit_redirect(row._id)" class="btn">Edit</button>
+            </div>
+          </td>
+          <td>             </td>
+          <td>
+            <div *ngIf='row.userid === user_id' class="form-group">
+              <button (click)="delete_Post(row._id)" class="btn">Delete</button>
+            </div>
+          </td>
+          <td>             </td>
+          <td>
+            <div class="form-group">
+              <button (click)="comment_redirect(row._id)" class="btn">View/Add Comments</button>
+            </div>
+          </td>
+
+          
+      </tr>
+  </table>
+  <p>{{message}}</p>
+  </div>
+</main>

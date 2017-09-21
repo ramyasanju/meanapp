@@ -1,0 +1,53 @@
+<main>
+  <div >
+    <h2>Register</h2>
+    <li>
+      <a [routerLink]="['/login']">Login</a>
+    </li>
+    <form #contactForm="ngForm" (ngSubmit)="registerUser(contactForm)" novalidate>
+      <div class="form-group">
+        <label for="email">UserName</label>
+        <input type="email" class="form-control" id="uname"  name="uname" ngModel #uname="ngModel" required>
+      </div>
+
+      <div *ngIf="!uname?.valid && (uname?.dirty ||uname?.touched)" class="alert alert-danger">
+        <div [hidden]="!uname.errors.required">
+        User Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email"  name="email" ngModel #email="ngModel" required>
+      </div>
+
+      <div *ngIf="!email?.valid && (email?.dirty ||email?.touched)" class="alert alert-danger">
+        <div [hidden]="!email.errors.required">
+          Email is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Password</label>
+        <input type="password" class="form-control" id="password"  name="password" ngModel #password="ngModel" required minlength="5">
+      </div>
+
+      <div *ngIf="!password?.valid && (password?.dirty ||password?.touched)" class="alert alert-danger">
+        <div [hidden]="!password.errors.required">
+          Password is required
+        </div>
+           
+       <div [hidden]="!password.errors.minlength">
+          Password Minimum Length is {{password.errors.minlength?.requiredLength}}
+       </div>
+      </div> 
+
+      <div class="form-group">
+      <button type="submit" [disabled]="!contactForm.valid">Submit</button>
+      </div>
+    </form>
+    <p>{{message}}</p>
+
+   
+  </div>
+</main>

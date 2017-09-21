@@ -1,0 +1,54 @@
+<main>
+  <div >
+      
+      <div class="form-group">
+          <li><button (click)="logout()" class="btn">Logout</button></li>
+      </div> 
+      <div class="form-group">
+        <a [routerLink]="['/posts']" >All Posts</a>
+      </div>  
+    <h2>Edit Posts</h2>
+    <form #updatePostsForm="ngForm" (ngSubmit)="editpost(updatePostsForm)" novalidate>
+      
+      <div class="form-group">
+        <label>Title</label>
+        <input type="title" class="form-control" id="title"  name="title" [(ngModel)]='postTitle' #title="ngModel" required>
+      </div>
+
+      <div *ngIf="!title?.valid && (title?.dirty ||title?.touched)" class="alert alert-danger">
+        <div [hidden]="!title.errors.required">
+          Title is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input type="description" class="form-control" id="description"  name="description" [(ngModel)]='postDesc' #description="ngModel" required>
+      </div>
+
+      <div *ngIf="!description?.valid && (description?.dirty ||description?.touched)" class="alert alert-danger">
+        <div [hidden]="!description.errors.required">
+          description is required
+        </div>
+      </div> 
+
+
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="tags" class="form-control" id="tags"  name="tags" [(ngModel)]='postTags' #tags="ngModel" required>
+      </div>
+
+      <div *ngIf="!tags?.valid && (tags?.dirty ||tags?.touched)" class="alert alert-danger">
+        <div [hidden]="!tags.errors.required">
+          Tags is required
+        </div>
+      </div>
+
+      <div class="form-group">
+      <button type="submit" [disabled]="!updatePostsForm.valid">Update Post</button>
+      </div>
+    </form>
+    <p>{{message}}</p>
+       
+  </div>
+</main>
