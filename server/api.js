@@ -234,13 +234,9 @@ router.get('/comments/:postId', (req, res) => {
 
 
 //Get All Posts
-router.get('/posts/:id', (req, res) => {
+router.get('/posts', (req, res) => {
     console.log("i am inside getall user post app route")
-    console.log("request",req.params.id);
-    
-    console.log('the userid for which all the posts to be taken',req.params.id)
-    var details = { 'userid': req.params.id };
-    // connection((db) => {
+    console.log("filter id for get post",req.params.filter_id);
     db.get().collection('posts').find().toArray(function(err, items){
         if(err){
             console.log("error is", err);
@@ -251,8 +247,8 @@ router.get('/posts/:id', (req, res) => {
             };
             res.json(content);
         } else {
-            console.log("All Post for the given user",items)
-            console.log("Type", typeof items)
+            // console.log("All Post for the given user",items)
+            // console.log("Type", typeof items)
             console.log("length",items.length)
             
             var tagnames = ''
@@ -324,6 +320,115 @@ router.get('/posts/:id', (req, res) => {
     })
             
     // });
+});
+
+//Get  Posts with filter
+router.get('/postsWithFilter/:post_type/:sort_type', (req, res) => {
+    var postTypeDetails
+    var sortTypeDetails
+    console.log("i am inside getall user post with filter app route")
+    var today = new Date();
+    // today.setHours(0, 0, 0, 0);
+    console.log("todday",today)
+    var onlyToday = {posted_date: {"$gte": new Date()}}
+    if (req.params.post_type == 1){
+        postTypeDetails = {}
+
+    }
+    else{
+        postTypeDetails = {'userid':req.params.post_type}
+    }
+
+    // if (req.params.sort_type == 0){
+    //     sortTypeDetails = onlyToday
+
+    // }
+    // else{
+    //     sortTypeDetails = {"sort" : [['posted_date', req.params.sort_type]]}
+    // }
+    
+    db.get().collection('posts').find(postTypeDetails,{"sort" : [['posted_date', req.params.sort_type]]}).toArray(function(err, items){
+        if(err){
+            console.log("error is", err);
+            console.log("error code is", err.code)
+            let content = {
+                success: false,
+                message: 'There is a error in getting all the user post'
+            };
+            res.json(content);
+        } else {
+            // console.log("All Post for the given user",items)
+            // console.log("Type", typeof items)
+            console.log("length",items.length)
+            
+            var tagnames = ''
+            async.eachSeries(items, function (spost, callback1) {
+                var tagarray = []
+                console.log("the items is",spost)
+                tagarray = JSON.parse(spost.tags);
+                console.log("the length of tag array is",tagarray.length)
+
+                tag_words = []
+                async.eachSeries(tagarray, function (tid, callback2) {
+                    console.log("inside async.each",tid)
+                    var name = {'_id':new ObjectID(tid)};
+                    console.log(name);
+                    // connection((db) => {
+                    console.log("inside connection")
+                    db.get().collection('tags').findOne(name, function(err, result) {
+                        if (err) 
+                            res.send(err);
+                        else {
+                            console.log("the record from tag table for given tagid",result)
+                            tag_words.push(result.name)
+                            console.log("the length of tag words is",tag_words.length)
+                            callback2(null,tag_words)
+                            
+
+                        }
+                    })
+                    // })
+                },function(err,data){
+                    if(err){
+                        console.log(" i am in async err");
+            
+                    }else{
+                        // tagnames = JSON.stringify(tag_words);
+                        tagnames = tag_words.toString()
+                        console.log("the tagword's are", tagnames)
+                        spost.tags = tagnames
+                        console.log("^^^^^^^",spost)
+                        callback1(null)
+                        
+                    }
+                })
+                
+                
+            },function(err,data){
+                if(err){
+                    console.log(" i am in first async err");
+        
+                }else{
+                    console.log("i am in first asyns else")
+                    console.log("%%%%%%%")
+                    let content = {
+                        success: true,
+                        message: 'The user post is retrived ',
+                        data: items
+                    };
+                    console.log("before sending")
+                    res.json(content);
+                    
+                    
+                }
+            })
+                                
+            
+
+        }
+                
+    })
+            
 });
 
 
@@ -637,6 +742,7 @@ router.post('/addposts', (req, res) => {
             var tagids = JSON.stringify(tag_value);
             console.log("the tagid's are", tagids)
             todo.tags=tagids
+            todo.posted_date = new Date();
             
             // connection((db) => {
             db.get().collection('posts').save(todo, function(err, result) {

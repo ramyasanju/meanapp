@@ -19,6 +19,8 @@ export class PostComponent implements OnInit {
   postcount:any
   posts: Array<any>;
   postinfo: any
+  filterId = 1
+  
   // post_count =postcount(localStorage.getItem('userid')); 
 
   constructor(private router: Router, private _http: Http) {
@@ -32,17 +34,39 @@ export class PostComponent implements OnInit {
     
   }
 
+
+  getValueFromFilter(postType,sortType)
+  {
+    console.log("i am inside filter component")
+    console.log("postType",postType)
+    console.log("sortType",sortType)
+
+    if (postType ==-1)
+    {
+      postType =this.user_id 
+    } 
+    
+    this._http.get("/api/postsWithFilter/"+postType+"/"+sortType).subscribe(res => {
+      console.log(JSON.parse(res['_body']))
+
+       this.posts = JSON.parse(res['_body']).data;
+    });
+
+
+  }
+  
+
   //getAllPost
   getpost(uid){
 
     console.log("i am inside getpost function")
     console.log(uid)
-    this._http.get("/api/posts/"+uid).subscribe(res => {
+    this._http.get("/api/posts").subscribe(res => {
       console.log(JSON.parse(res['_body']))
 
        this.posts = JSON.parse(res['_body']).data;
      });
-     console.log(this.posts)
+     
 
   }
 
@@ -69,7 +93,7 @@ export class PostComponent implements OnInit {
 
        this.postcount = JSON.parse(res['_body']).data.postcount;
      });
-     console.log(this.postcount)
+     
   }
 
  // Add Post
