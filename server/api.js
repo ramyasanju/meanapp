@@ -19,6 +19,7 @@ var upload = multer({dest: DIR}).single('photo');
 //our file upload function.
 router.post('/upload', function (req, res, next) {
     console.log("i am inside upload image comment router")
+    // console.log("the request for image upload is",req)
      var path = '';
      upload(req, res, function (err) {
         if (err) {
@@ -163,7 +164,7 @@ router.get('/commentText/:commentId', (req, res) => {
             res.json(content);
 
         } else {
-            console.log("comment text without error",item)
+            // console.log("comment text without error",item)
             let content = {
                 success: true,
                 message: 'The comment text to be updated is retrived',
@@ -190,19 +191,19 @@ router.get('/comments/:postId', (req, res) => {
             };
             res.json(content);
         } else {
-            console.log("All comments for the given post",items)
-            console.log("Type", typeof items)
+            // console.log("All comments for the given post",items)
+            // console.log("Type", typeof items)
             async.eachSeries(items, function (scomment, callback) {
-                console.log("inside comments async.each",scomment.userid)
+                // console.log("inside comments async.each",scomment.userid)
                 var name = {'_id':new ObjectID(scomment.userid)};
-                console.log(name);
+                // console.log(name);
                 // connection((db) => {
-                console.log("inside connection")
+                // console.log("inside connection")
                 db.get().collection('members').findOne(name, function(err, result) {
                     if (err) 
                         res.send(err);
                     else {
-                        console.log("the username from member table for given userid",result)
+                        // console.log("the username from member table for given userid",result)
                         scomment.commentby = result.uname                      
                         callback(null)
                     }
@@ -213,7 +214,7 @@ router.get('/comments/:postId', (req, res) => {
                     console.log(" i am in comments async err");
         
                 }else{
-                    console.log("i am in comments asyns finish",items)
+                    // console.log("i am in comments asyns finish",items)
                     console.log("%%%%%%%")
                     let content = {
                         success: true,
@@ -260,18 +261,18 @@ router.get('/posts', (req, res) => {
 
                 tag_words = []
                 async.eachSeries(tagarray, function (tid, callback2) {
-                    console.log("inside async.each",tid)
+                    // console.log("inside async.each",tid)
                     var name = {'_id':new ObjectID(tid)};
-                    console.log(name);
+                    // console.log(name);
                     // connection((db) => {
-                    console.log("inside connection")
+                    // console.log("inside connection")
                     db.get().collection('tags').findOne(name, function(err, result) {
                         if (err) 
                             res.send(err);
                         else {
-                            console.log("the record from tag table for given tagid",result)
+                            // console.log("the record from tag table for given tagid",result)
                             tag_words.push(result.name)
-                            console.log("the length of tag words is",tag_words.length)
+                            // console.log("the length of tag words is",tag_words.length)
                             callback2(null,tag_words)
                             
 
@@ -285,9 +286,9 @@ router.get('/posts', (req, res) => {
                     }else{
                         // tagnames = JSON.stringify(tag_words);
                         tagnames = tag_words.toString()
-                        console.log("the tagword's are", tagnames)
+                        // console.log("the tagword's are", tagnames)
                         spost.tags = tagnames
-                        console.log("^^^^^^^",spost)
+                        // console.log("^^^^^^^",spost)
                         callback1(null)
                         
                     }
@@ -372,16 +373,16 @@ router.get('/postsWithFilter/:post_type/:sort_type', (req, res) => {
                 async.eachSeries(tagarray, function (tid, callback2) {
                     console.log("inside async.each",tid)
                     var name = {'_id':new ObjectID(tid)};
-                    console.log(name);
+                    // console.log(name);
                     // connection((db) => {
-                    console.log("inside connection")
+                    // console.log("inside connection")
                     db.get().collection('tags').findOne(name, function(err, result) {
                         if (err) 
                             res.send(err);
                         else {
-                            console.log("the record from tag table for given tagid",result)
+                            // console.log("the record from tag table for given tagid",result)
                             tag_words.push(result.name)
-                            console.log("the length of tag words is",tag_words.length)
+                            // console.log("the length of tag words is",tag_words.length)
                             callback2(null,tag_words)
                             
 
@@ -395,9 +396,9 @@ router.get('/postsWithFilter/:post_type/:sort_type', (req, res) => {
                     }else{
                         // tagnames = JSON.stringify(tag_words);
                         tagnames = tag_words.toString()
-                        console.log("the tagword's are", tagnames)
+                        // console.log("the tagword's are", tagnames)
                         spost.tags = tagnames
-                        console.log("^^^^^^^",spost)
+                        // console.log("^^^^^^^",spost)
                         callback1(null)
                         
                     }
@@ -454,18 +455,18 @@ router.get('/postdetails/:postid', (req, res) =>{
             tagNoArray = JSON.parse(item.tags)
             tag_words = []
             async.eachSeries(tagNoArray, function (tid, callback2) {
-                console.log("inside async.each",tid)
+                // console.log("inside async.each",tid)
                 var name = {'_id':new ObjectID(tid)};
                 console.log(name);
                 // connection((db) => {
-                console.log("inside connection")
+                // console.log("inside connection")
                 db.get().collection('tags').findOne(name, function(err, result) {
                     if (err) 
                         res.send(err);
                     else {
-                        console.log("the record from tag table for given tagid",result)
+                        // console.log("the record from tag table for given tagid",result)
                         tag_words.push(result.name)
-                        console.log("the length of tag words is",tag_words.length)
+                        // console.log("the length of tag words is",tag_words.length)
                         callback2(null,tag_words)
                         
 
@@ -479,9 +480,9 @@ router.get('/postdetails/:postid', (req, res) =>{
                 }else{
                     // tagnames = JSON.stringify(tag_words);
                     tagnames = tag_words.toString()
-                    console.log("the tagword's are", tagnames)
+                    // console.log("the tagword's are", tagnames)
                     item.tags = tagnames
-                    console.log("atlast the item is",item)
+                    // console.log("atlast the item is",item)
                     let content = {
                         success: true,
                         message: 'The post details is retrived',
@@ -664,7 +665,7 @@ router.post('/updatePost', (req, res) => {
             
             var postIdToUpdate = new ObjectID(todo.postid);
             console.log('the objectid to be updated is',postIdToUpdate)
-            var newvalues = { title: todo.title, description: todo.description,tags:todo.tags,userid:todo.userid};
+            var newvalues = { title: todo.title, description: todo.description,tags:todo.tags,userid:todo.userid,posted_date:todo.posted_date};
             console.log("new values", newvalues)
             // connection((db) => {
             db.get().collection('posts').updateOne({ '_id': postIdToUpdate },newvalues , function(err, result) {
