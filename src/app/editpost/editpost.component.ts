@@ -15,6 +15,7 @@ export class EditpostComponent implements OnInit {
   postDesc: any
   postTags: any
   postId: any
+  postedDate: any
   model: any={}
   message: string = '';
   user_id: any;
@@ -31,6 +32,7 @@ export class EditpostComponent implements OnInit {
       this.postTitle = JSON.parse(res['_body']).data.title
       this.postDesc = JSON.parse(res['_body']).data.description
       this.postTags = JSON.parse(res['_body']).data.tags
+      this.postedDate = JSON.parse(res['_body']).data.posted_date
     })
 
 
@@ -47,6 +49,8 @@ export class EditpostComponent implements OnInit {
     this.user_id = localStorage.getItem('userid')
     this.model.userid = this.user_id
     this.model.postid = this.postId
+    this.model.posted_date = this.postedDate
+
     // console.log("the type os this.model is", typeof this.model)
     // console.log("the value of this.model", this.model)
     console.log("the userid is ",this.user_id)
